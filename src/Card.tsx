@@ -13,7 +13,7 @@ import {
 import DropIndicator from "@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box";
 
 export const Card = ({ card }: { card: CardType }) => {
-  const { id, title, position, column } = card;
+  const { id, title, position, columnId } = card;
   const ref = useRef(null);
   const [closestEdge, setClosestEdge] = useState<Edge>(null);
   const [isDragging, setDragging] = useState<boolean>(false);
@@ -24,7 +24,7 @@ export const Card = ({ card }: { card: CardType }) => {
     const dragConfig = {
       element: element,
       getInitialData: () => {
-        return { id, position, column };
+        return { id, position, columnId };
       },
       onDragStart: () => {
         setDragging(true);
@@ -42,7 +42,7 @@ export const Card = ({ card }: { card: CardType }) => {
 
       getData({ input, element }) {
         return attachClosestEdge(
-          { id, position, column },
+          { id, position, columnId },
           {
             element,
             input,
@@ -66,7 +66,7 @@ export const Card = ({ card }: { card: CardType }) => {
     };
 
     return combine(draggable(dragConfig), dropTargetForElements(dropConfig));
-  }, [column, id, position]);
+  }, [columnId, id, position]);
 
   return (
     <li

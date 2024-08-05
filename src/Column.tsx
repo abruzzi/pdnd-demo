@@ -51,7 +51,7 @@ export const Column = ({
             return;
           }
 
-          let targetPosition: unknown = -1;
+          let targetPosition: number = -1;
           if (indexOfTarget === 0) {
             targetPosition = 0;
           } else if (indexOfTarget === cards.length - 1) {
