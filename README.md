@@ -1,30 +1,21 @@
-# React + TypeScript + Vite
+# A simple application to demonstrate Pragmatic drag and drop
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Atlassian has published a new drag-and-drop library
+called [Pragmatic drag and drop](https://atlassian.design/components/pragmatic-drag-and-drop/about), which is used
+widely in many internal products like Jira, Confluence, etc.
 
-Currently, two official plugins are available:
+This is a quick demo on how to use it with the "simplest" setup, although you can use pdnd is any other frontend
+libraries, I choose React as that's my field for these years. More examples are available in Atlassian [design system website](https://atlassian.design/components/pragmatic-drag-and-drop/examples).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tech stack
 
-## Expanding the ESLint configuration
+- React
+- Vite
+- TailwindCSS
+- Pragmatic drag and drop (or pdnd)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Disclaimer
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+The logic of `move card` is implemented by `Claude`, meaning I didn't check the whole logic and also not responsible the
+cleanness of that piece, :)
+But it looks working fine with my drag-and-drop.
