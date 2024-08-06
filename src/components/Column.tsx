@@ -1,70 +1,9 @@
-import { CardType, ColumnType } from "../type.tsx";
-import { useEffect } from "react";
-import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
-import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { Card } from "./Card.tsx";
-import { useBoard } from "../data/BoardProvider.tsx";
+import { ColumnType } from "../type.tsx";
 import { EmptyCardHolder } from "./EmptyCardHolder.tsx";
-import { isCardType } from "../utils.ts";
-
-const CardList = ({ cards }: { cards: CardType[] }) => {
-  return (
-    <ol className="p-4 flex flex-col gap-4">
-      {cards.map((card) => (
-        <Card key={card.id} card={card} />
-      ))}
-    </ol>
-  );
-};
+import { CardList } from "./CardList.tsx";
 
 export const Column = ({ column }: { column: ColumnType }) => {
   const { id, name, cards } = column;
-  const { moveCard } = useBoard();
-
-  useEffect(() => {
-    return combine(
-      monitorForElements({
-        onDrop: ({ source, location }) => {
-          const target = location.current.dropTargets[0];
-
-          if (!target) {
-            return;
-          }
-
-          if(!isCardType(source.data) || !isCardType(target.data)) {
-            return;
-          }
-
-          const sourceData: CardType = source.data;
-          const targetData: CardType = target.data;
-
-          if (targetData.id === "placeholder") {
-            moveCard(sourceData.id, targetData.columnId, 0);
-          } else {
-            const indexOfTarget = cards.findIndex(
-              (card) => card.id === targetData.id
-            );
-
-            if (indexOfTarget < 0) {
-              return;
-            }
-
-            let targetPosition: number = -1;
-            if (indexOfTarget === 0) {
-              targetPosition = 0;
-            } else if (indexOfTarget === cards.length - 1) {
-              targetPosition = -1;
-            } else {
-              targetPosition = targetData.position;
-            }
-
-            // actually move the card in the dataset...
-            moveCard(sourceData.id, id, targetPosition);
-          }
-        },
-      })
-    );
-  }, [cards, id, moveCard]);
 
   return (
     <li className="w-72 h-full shrink-0 bg-gray-200 rounded-md">
