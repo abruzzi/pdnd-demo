@@ -1,9 +1,10 @@
-import { CardType } from "./type.tsx";
+import { CardType, ColumnType } from "./type.tsx";
 import { useEffect } from "react";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { Card } from "./Card.tsx";
 import { useBoard } from "./BoardProvider.tsx";
+import { EmptyCardHolder } from "./EmptyCardHolder.tsx";
 
 const CardList = ({ cards }: { cards: CardType[] }) => {
   return (
@@ -15,15 +16,18 @@ const CardList = ({ cards }: { cards: CardType[] }) => {
   );
 };
 
-export const Column = ({
-  id,
-  name,
-  cards = [],
-}: {
-  id: string;
-  name: string;
-  cards?: CardType[];
-}) => {
+function isCardType(data: Record<string | symbol, unknown>): data is CardType {
+  return (
+    typeof data.id === "string" &&
+    typeof data.title === "string" &&
+    typeof data.position === "number" &&
+    typeof data.columnId === "string"
+  );
+}
+
+
+export const Column = ({ column }: { column: ColumnType }) => {
+  const { id, name, cards } = column;
   const { moveCard } = useBoard();
 
   useEffect(() => {
@@ -36,31 +40,36 @@ export const Column = ({
             return;
           }
 
-          const sourceData = source.data;
-          const targetData = target.data;
-
-          console.log(sourceData);
-          console.log(targetData);
-
-          // we're reordering in a column
-          const indexOfTarget = cards.findIndex(
-            (card) => card.id === targetData.id
-          );
-
-          if (indexOfTarget < 0) {
+          if(!isCardType(source.data) || !isCardType(target.data)) {
             return;
           }
 
-          let targetPosition: number = -1;
-          if (indexOfTarget === 0) {
-            targetPosition = 0;
-          } else if (indexOfTarget === cards.length - 1) {
-            targetPosition = -1;
-          } else {
-            targetPosition = targetData.position;
-          }
+          const sourceData: CardType = source.data;
+          const targetData: CardType = target.data;
 
-          moveCard(sourceData.id, id, targetPosition);
+          if (targetData.id === "placeholder") {
+            moveCard(sourceData.id, targetData.columnId, 0);
+          } else {
+            const indexOfTarget = cards.findIndex(
+              (card) => card.id === targetData.id
+            );
+
+            if (indexOfTarget < 0) {
+              return;
+            }
+
+            let targetPosition: number = -1;
+            if (indexOfTarget === 0) {
+              targetPosition = 0;
+            } else if (indexOfTarget === cards.length - 1) {
+              targetPosition = -1;
+            } else {
+              targetPosition = targetData.position;
+            }
+
+            // actually move the card in the dataset...
+            moveCard(sourceData.id, id, targetPosition);
+          }
         },
       })
     );
@@ -69,7 +78,11 @@ export const Column = ({
   return (
     <li className="w-72 h-full shrink-0 bg-gray-200 rounded-md">
       <h2 className="p-4 text-slate-700">{name}</h2>
-      {cards.length > 0 ? <CardList cards={cards} /> : null}
+      {cards.length > 0 ? (
+        <CardList cards={cards} />
+      ) : (
+        <EmptyCardHolder columnId={id} />
+      )}
     </li>
   );
 };

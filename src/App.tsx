@@ -1,4 +1,3 @@
-import "./App.css";
 import { BoardProvider } from "./BoardProvider.tsx";
 import { Board } from "./Board.tsx";
 

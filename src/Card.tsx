@@ -24,7 +24,7 @@ export const Card = ({ card }: { card: CardType }) => {
     const dragConfig = {
       element: element,
       getInitialData: () => {
-        return { id, position, columnId };
+        return card;
       },
       onDragStart: () => {
         setDragging(true);
@@ -39,16 +39,12 @@ export const Card = ({ card }: { card: CardType }) => {
       canDrop({ source }) {
         return source.element !== element;
       },
-
       getData({ input, element }) {
-        return attachClosestEdge(
-          { id, position, columnId },
-          {
-            element,
-            input,
-            allowedEdges: ["top", "bottom"],
-          }
-        );
+        return attachClosestEdge(card, {
+          element,
+          input,
+          allowedEdges: ["top", "bottom"],
+        });
       },
       onDrag: ({ self }) => {
         const closestEdge = extractClosestEdge(self.data);
@@ -77,6 +73,7 @@ export const Card = ({ card }: { card: CardType }) => {
       }`}
     >
       <p>{title}</p>
+
       {closestEdge && <DropIndicator edge={closestEdge} gap="1rem" />}
     </li>
   );

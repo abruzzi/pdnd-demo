@@ -9,7 +9,7 @@ const Board = () => {
       <h1 className="mx-10 my-4 text-2xl">{board?.name}</h1>
       <ol className="max-h-full mx-10 my-4 flex flex-row gap-6 flex-grow">
         {board?.columns.map((col) => (
-          <Column key={col.id} id={col.id} name={col.name} cards={col.cards} />
+          <Column key={col.id} column={col} />
         ))}
       </ol>
     </div>
