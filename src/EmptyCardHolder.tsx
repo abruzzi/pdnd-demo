@@ -7,6 +7,7 @@ import {
   Edge,
   extractClosestEdge,
 } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
+import { CardType } from "./type.tsx";
 
 const EmptyCardHolder = ({ columnId }: { columnId: string }) => {
   const ref = useRef(null);
@@ -22,7 +23,12 @@ const EmptyCardHolder = ({ columnId }: { columnId: string }) => {
       },
       getData({ input, element }) {
         return attachClosestEdge(
-          { columnId: columnId, position: 0, id: "placeholder" },
+          {
+            columnId: columnId,
+            position: 0,
+            id: "placeholder",
+            title: "",
+          } as CardType,
           {
             element,
             input,
@@ -50,10 +56,7 @@ const EmptyCardHolder = ({ columnId }: { columnId: string }) => {
 
   return (
     <ol className="p-4 flex flex-col gap-4">
-      <li
-        ref={ref}
-        className={`relative p-2 hover:cursor-grab h-4`}
-      >
+      <li ref={ref} className={`relative p-2 hover:cursor-grab h-4`}>
         {closestEdge && <DropIndicator edge={closestEdge} gap="1rem" />}
       </li>
     </ol>

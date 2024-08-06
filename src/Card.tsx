@@ -62,7 +62,7 @@ export const Card = ({ card }: { card: CardType }) => {
     };
 
     return combine(draggable(dragConfig), dropTargetForElements(dropConfig));
-  }, [columnId, id, position]);
+  }, [card, columnId, id, position]);
 
   return (
     <li
