@@ -7,7 +7,7 @@ import {
   Edge,
   extractClosestEdge,
 } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
-import { CardType } from "./type.tsx";
+import { CardType } from "../type.tsx";
 
 const EmptyCardHolder = ({ columnId }: { columnId: string }) => {
   const ref = useRef(null);

@@ -1,10 +1,11 @@
-import { CardType, ColumnType } from "./type.tsx";
+import { CardType, ColumnType } from "../type.tsx";
 import { useEffect } from "react";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { Card } from "./Card.tsx";
-import { useBoard } from "./BoardProvider.tsx";
+import { useBoard } from "../data/BoardProvider.tsx";
 import { EmptyCardHolder } from "./EmptyCardHolder.tsx";
+import { isCardType } from "../utils.ts";
 
 const CardList = ({ cards }: { cards: CardType[] }) => {
   return (
@@ -15,16 +16,6 @@ const CardList = ({ cards }: { cards: CardType[] }) => {
     </ol>
   );
 };
-
-function isCardType(data: Record<string | symbol, unknown>): data is CardType {
-  return (
-    typeof data.id === "string" &&
-    typeof data.title === "string" &&
-    typeof data.position === "number" &&
-    typeof data.columnId === "string"
-  );
-}
-
 
 export const Column = ({ column }: { column: ColumnType }) => {
   const { id, name, cards } = column;

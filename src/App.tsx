@@ -1,5 +1,5 @@
-import { BoardProvider } from "./BoardProvider.tsx";
-import { Board } from "./Board.tsx";
+import { BoardProvider } from "./data/BoardProvider.tsx";
+import { Board } from "./components/Board.tsx";
 
 function App() {
   return (

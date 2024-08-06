@@ -1,0 +1,46 @@
+{
+  "name": "My board",
+  "columns": [
+    {
+      "id": "todo",
+      "name": "To do",
+      "cards": [
+        {
+          "id": "id-1",
+          "title": "Buy some milk",
+          "position": 1,
+          "columnId": "todo"
+        },
+        {
+          "id": "id-2",
+          "title": "Write some CSS",
+          "position": 2,
+          "columnId": "todo"
+        },
+        {
+          "id": "id-3",
+          "title": "Learn skipping",
+          "position": 3,
+          "columnId": "todo"
+        }
+      ]
+    },
+    {
+      "id": "in-progress",
+      "name": "In progress",
+      "cards": [
+        {
+          "id": "id-4",
+          "title": "Make a video",
+          "position": 1,
+          "columnId": "in-progress"
+        }
+      ]
+    },
+    {
+      "id": "done",
+      "name": "Done",
+      "cards": []
+    }
+  ]
+}

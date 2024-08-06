@@ -1,4 +1,4 @@
-import { CardType } from "./type.tsx";
+import { CardType } from "../type.tsx";
 import { useEffect, useRef, useState } from "react";
 import {
   attachClosestEdge,
