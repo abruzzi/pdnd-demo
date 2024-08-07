@@ -1,18 +1,20 @@
 import { CardType } from "../type.tsx";
 import { useEffect, useRef, useState } from "react";
-import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import {
+  draggable,
+  dropTargetForElements,
+} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 
-import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
-import { pointerOutsideOfPreview } from '@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview';
-import { createPortal } from "react-dom";
+import { useBoard } from "../data/BoardProvider.tsx";
 
 export const Card = ({ card }: { card: CardType }) => {
-  const { id, title, position, columnId } = card;
+  const { id, title } = card;
   const ref = useRef(null);
 
+  const { moveCard } = useBoard();
+
   const [isDragging, setDragging] = useState(false);
-  const [preview, setPreview] = useState<HTMLElement>();
 
   useEffect(() => {
     const element = ref.current;
@@ -22,26 +24,31 @@ export const Card = ({ card }: { card: CardType }) => {
       onDragStart() {
         setDragging(true);
       },
+      getInitialData() {
+        return card;
+      },
       onDrop() {
         setDragging(false);
-        setPreview(undefined);
-      },
-      onGenerateDragPreview({ nativeSetDragImage }) {
-        setCustomNativeDragPreview({
-          nativeSetDragImage,
-          getOffset: pointerOutsideOfPreview({
-            x: '8px',
-            y: '8px',
-          }),
-          render({ container }) {
-            setPreview(container);
-          },
-        });
       },
     };
 
-    return combine(draggable(dragConfig));
-  }, []);
+    const dropConfig = {
+      element,
+      getData() {
+        return card;
+      },
+      onDrop({ source, self }) {
+        const target = self;
+        moveCard(
+          source.data.id,
+          target.data.columnId,
+          target.data.position + 1
+        );
+      },
+    };
+
+    return combine(draggable(dragConfig), dropTargetForElements(dropConfig));
+  }, [card, moveCard]);
 
   return (
     <li
@@ -51,17 +58,8 @@ export const Card = ({ card }: { card: CardType }) => {
         isDragging ? "opacity-50" : ""
       }`}
     >
+      <span className="bg-amber-500 text-slate-100 rounded-sm py-0.5 px-1 text-xs text-center">{id}</span>
       <p>{title}</p>
-      {preview && createPortal(<DragPreview card={card} />, preview)}
     </li>
   );
 };
-
-// A simplified version of our task for the user to drag around
-function DragPreview({ card }: { card: CardType }) {
-  return (
-    <div className="border-solid rounded p-2 bg-orange-500 text-slate-100 w-72">
-      {card.title}
-    </div>
-  );
-}
