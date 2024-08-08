@@ -21,11 +21,11 @@ export const Card = ({ card }: { card: CardType }) => {
 
     const dragConfig = {
       element,
-      onDragStart() {
-        setDragging(true);
-      },
       getInitialData() {
         return card;
+      },
+      onDragStart() {
+        setDragging(true);
       },
       onDrop() {
         setDragging(false);
@@ -54,12 +54,14 @@ export const Card = ({ card }: { card: CardType }) => {
     <li
       ref={ref}
       data-test-id={id}
-      className={`relative p-2 bg-gray-100 rounded-md text-lg hover:cursor-grab ${
+      className={`relative p-2 bg-gradient-to-br from-slate-100 to-slate-200 drop-shadow-sm rounded-md text-lg hover:cursor-grab ${
         isDragging ? "opacity-50" : ""
       }`}
     >
-      <span className="bg-amber-500 text-slate-100 rounded-sm py-0.5 px-1 text-xs text-center">{id}</span>
-      <p>{title}</p>
+      <span className="bg-orange-500 text-white rounded-sm py-0.5 px-1 text-xs text-center">
+        {id}
+      </span>
+      <p className="text-slate-800">{title}</p>
     </li>
   );
 };
