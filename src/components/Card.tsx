@@ -1,8 +1,13 @@
 import { CardType } from "../type.tsx";
 import { useEffect, useRef, useState } from "react";
-import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import {
+  draggable,
+  dropTargetForElements,
+} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
 import { createPortal } from "react-dom";
+import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
+import { useBoard } from "../data/BoardProvider.tsx";
 
 export const Card = ({ card }: { card: CardType }) => {
   const { id, title } = card;
@@ -10,31 +15,52 @@ export const Card = ({ card }: { card: CardType }) => {
   const [isDragging, setDragging] = useState(false);
   const [preview, setPreview] = useState<HTMLElement | null>(null);
 
+  const { moveCard } = useBoard();
+
   useEffect(() => {
     const element = ref.current;
     if (!element) {
       return;
     }
 
-    return draggable({
-      element,
-      onDragStart() {
-        setDragging(true);
-      },
-      onDrop() {
-        setDragging(false);
-        setPreview(null);
-      },
-      onGenerateDragPreview({ nativeSetDragImage }) {
-        setCustomNativeDragPreview({
-          nativeSetDragImage,
-          render({ container }) {
-            setPreview(container);
-          },
-        });
-      },
-    });
-  }, []);
+    return combine(
+      draggable({
+        element,
+        getInitialData() {
+          return card;
+        },
+        onDragStart() {
+          setDragging(true);
+        },
+        onDrop() {
+          setDragging(false);
+          setPreview(null);
+        },
+        onGenerateDragPreview({ nativeSetDragImage }) {
+          setCustomNativeDragPreview({
+            nativeSetDragImage,
+            render({ container }) {
+              setPreview(container);
+            },
+          });
+        },
+      }),
+
+      dropTargetForElements({
+        element,
+        getData() {
+          return card;
+        },
+        onDrop({ source, self: target }) {
+          moveCard(
+            source.data.id,
+            target.data.columnId,
+            target.data.position + 1
+          );
+        },
+      })
+    );
+  }, [card, moveCard]);
 
   return (
     <li
