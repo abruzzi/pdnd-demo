@@ -7,15 +7,13 @@ import {
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
 import { createPortal } from "react-dom";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
-import { useBoard } from "../data/BoardProvider.tsx";
 
 export const Card = ({ card }: { card: CardType }) => {
   const { id, title } = card;
   const ref = useRef(null);
   const [isDragging, setDragging] = useState(false);
   const [preview, setPreview] = useState<HTMLElement | null>(null);
-
-  const { moveCard } = useBoard();
+  const [aboutToDrop, setAboutToDrop] = useState(false);
 
   useEffect(() => {
     const element = ref.current;
@@ -51,23 +49,28 @@ export const Card = ({ card }: { card: CardType }) => {
         getData() {
           return card;
         },
-        onDrop({ source, self: target }) {
-          moveCard(
-            source.data.id,
-            target.data.columnId,
-            target.data.position + 1
-          );
+        canDrop({ source }) {
+          return source.element !== element;
+        },
+        onDragEnter() {
+          setAboutToDrop(true);
+        },
+        onDragLeave() {
+          setAboutToDrop(false);
+        },
+        onDrop() {
+          setAboutToDrop(false);
         },
       })
     );
-  }, [card, moveCard]);
+  }, [card]);
 
   return (
     <li
       data-test-id={id}
       className={`relative p-2 bg-gradient-to-br from-slate-100 to-slate-200 drop-shadow-sm rounded-md text-lg ${
         isDragging ? "opacity-50" : ""
-      }`}
+      } ${aboutToDrop ? "bg-gradient-to-br from-green-100 to-green-200" : ""}`}
       ref={ref}
     >
       <span className="bg-orange-500 text-white rounded-sm py-0.5 px-1 text-xs text-center">
