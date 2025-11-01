@@ -21,47 +21,50 @@ export const Card = ({ card }: { card: CardType }) => {
       return;
     }
 
-    return combine(
-      draggable({
-        element,
-        getInitialData() {
-          return card;
-        },
-        onDragStart() {
-          setDragging(true);
-        },
-        onDrop() {
-          setDragging(false);
-          setPreview(null);
-        },
-        onGenerateDragPreview({ nativeSetDragImage }) {
-          setCustomNativeDragPreview({
-            nativeSetDragImage,
-            render({ container }) {
-              setPreview(container);
-            },
-          });
-        },
-      }),
+    const dropConfig = dropTargetForElements({
+      element,
+      getData() {
+        return card;
+      },
+      canDrop({ source }) {
+        return source.element !== element;
+      },
+      onDragEnter() {
+        setAboutToDrop(true);
+      },
+      onDragLeave() {
+        setAboutToDrop(false);
+      },
+      onDrop() {
+        setAboutToDrop(false);
+      },
+    });
 
-      dropTargetForElements({
-        element,
-        getData() {
-          return card;
-        },
-        canDrop({ source }) {
-          return source.element !== element;
-        },
-        onDragEnter() {
-          setAboutToDrop(true);
-        },
-        onDragLeave() {
-          setAboutToDrop(false);
-        },
-        onDrop() {
-          setAboutToDrop(false);
-        },
-      })
+    const dragConfig = draggable({
+      element,
+      getInitialData() {
+        return card;
+      },
+      onDragStart() {
+        setDragging(true);
+      },
+      onDrop() {
+        setDragging(false);
+        setPreview(null);
+      },
+      onGenerateDragPreview({ nativeSetDragImage }) {
+        setCustomNativeDragPreview({
+          nativeSetDragImage,
+          render({ container }) {
+            setPreview(container);
+          },
+        });
+      },
+    });
+
+    return combine(
+      dragConfig,
+      dropConfig
     );
   }, [card]);
 

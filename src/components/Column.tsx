@@ -68,7 +68,7 @@ export const Column = ({ column }: { column: ColumnType }) => {
         }
       }
     })
-  }, [moveCard]);
+  }, [cards, moveCard]);
 
   return (
     <li
